@@ -12,6 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 
 // Configure EF Core with SQL Server
 builder.Services.AddDbContext<QuizDbContext>(options =>
@@ -61,6 +71,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 
+app.UseCors("AllowAllOrigins"); // Enable CORS before authentication
 app.UseAuthentication();
 app.UseAuthorization();
 
