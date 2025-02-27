@@ -3,8 +3,4 @@
     public class QuizDTO
     {
     }
-
-    public class Quiz 
-    { 
-    }
 }
