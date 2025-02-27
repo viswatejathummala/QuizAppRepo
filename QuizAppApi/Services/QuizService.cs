@@ -1,4 +1,5 @@
-﻿using QuizAppApi.DTO;
+﻿using QuizAppApi.Data;
+using QuizAppApi.DTO;
 using QuizAppApi.Repositories;
 
 namespace QuizAppApi.Services

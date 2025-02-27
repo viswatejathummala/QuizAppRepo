@@ -1,4 +1,4 @@
-﻿using QuizAppApi.DTO;
+﻿using QuizAppApi.Data;
 
 namespace QuizAppApi.Services
 {

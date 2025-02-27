@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using QuizAppApi.DTO;
+﻿using Microsoft.AspNetCore.Mvc;
+using QuizAppApi.Data;
 using QuizAppApi.Services;
 
 namespace QuizAppApi.Controllers
@@ -36,13 +35,13 @@ namespace QuizAppApi.Controllers
         public async Task<IActionResult> CreateQuiz([FromBody] Quiz quiz)
         {
             await _quizService.AddQuizAsync(quiz);
-            return CreatedAtAction(nameof(GetQuiz), new { id = quiz.Id }, quiz);
+            return CreatedAtAction(nameof(GetQuiz), new { id = quiz.QuizId }, quiz);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateQuiz(int id, [FromBody] Quiz quiz)
         {
-            if (id != quiz.Id)
+            if (id != quiz.QuizId)
                 return BadRequest();
 
             await _quizService.UpdateQuizAsync(quiz);
