@@ -18,10 +18,11 @@ namespace QuizAppApi.Controllers
         private readonly IUserService _userService;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthController(IUserService userService, IPasswordHasher<User> passwordHasher)
+        public AuthController(IUserService userService, IPasswordHasher<User> passwordHasher,IConfiguration config)
         {
            _userService = userService;
            _passwordHasher = passwordHasher;
+            _config = config;
         }
 
         [HttpPost("login")]
