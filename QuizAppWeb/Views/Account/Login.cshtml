@@ -65,24 +65,26 @@
         <p id="errorMessage" style="color: red; display: none;"></p>
     </div>
 
-    <script>s
+    <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (e) {
                 e.preventDefault(); // Prevent form submission
 
                 var loginData = {
-                    Username: $("#username").val(),
+                    Email: $("#username").val(),
                     Password: $("#password").val()
                 };
 
                 $.ajax({
-                    url: "/api/account/login",  // API endpoint
+                    url: "https://localhost:44362/Auth/login",  // API endpoint
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(loginData),
-                    success: function (response) {
+                    success: function (response) { 
+                        console.log(response);
+                        localStorage.setItem("jwtToken", response.token);
                         alert("Login Successful!");
-                        window.location.href = "/admin/dashboard"; // Redirect on success
+                        window.location.href = "/Admin/Dashboard"; // Redirect on success
                     },
                     error: function (xhr) {
                         $("#errorMessage").text("Login Failed: " + xhr.responseText).show();

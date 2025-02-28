@@ -84,16 +84,19 @@
                     return;
                 }
 
+              
                 var registerData = {
                     FirstName: $("#firstName").val(),
                     LastName: $("#lastName").val(),
                     Email: $("#email").val(),
-                    Password: password,
+                    PasswordHash: password,
                     UserRole: $("#userRole").val()
                 };
 
+                console.log(registerData);
+
                 $.ajax({
-                    url: "/api/account/register",
+                    url: "https://localhost:44362/Auth/register",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(registerData),
