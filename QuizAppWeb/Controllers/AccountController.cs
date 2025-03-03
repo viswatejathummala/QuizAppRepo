@@ -1,51 +1,51 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuizAppWeb.Models;
+using QuizAppWeb.Service;
 
 namespace QuizAppWeb.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IUserService _userService;
+
+        public AccountController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         public IActionResult Login() => View();
         public IActionResult Register() => View();
         public IActionResult ForgotPassword() => View();
         public IActionResult ResetPassword() => View();
+        
 
         [HttpPost]
-        public IActionResult Login(User user)
+        public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
         {
-            // Authentication logic here
-            return RedirectToAction("Dashboard", "Admin");
+            bool isSuccess = await _userService.LoginAsync(loginModel);
+            if (isSuccess)
+            {
+                //Get the token from API and put here.
+                var token = "sample-jwt-token";
+
+                return Json(new { success = true, token });
+            }
+
+            ModelState.AddModelError("", "Invalid login credentials.");
+            return BadRequest(new { success = false, message = "Invalid login credentials." });
         }
 
         [HttpPost]
-        public IActionResult Register(User user)
+        public async Task<IActionResult> Register([FromBody]UserModel userModel)
         {
-            // Registration logic here
-            return RedirectToAction("Login");
-        }
-        public class User
-        {
-            public int Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Email { get; set; }
-            public string Password { get; set; }
-            public string Role { get; set; } // Admin/User
-        }
+            bool isSuccess = await _userService.RegisterUserAsync(userModel);
+            if (isSuccess)
+            {
+                return RedirectToAction("Login");
+            }
 
-        public class Quiz
-        {
-            public int Id { get; set; }
-            public string Title { get; set; }
-            public List<Question> Questions { get; set; }
+            ModelState.AddModelError("", "Registration failed.");
+            return View(userModel);
         }
-
-        public class Question
-        {
-            public int Id { get; set; }
-            public string Text { get; set; }
-            public List<string> Options { get; set; }
-            public string CorrectAnswer { get; set; }
-        }
-
     }
 }

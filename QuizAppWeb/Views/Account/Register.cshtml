@@ -90,13 +90,14 @@
                     LastName: $("#lastName").val(),
                     Email: $("#email").val(),
                     PasswordHash: password,
-                    UserRole: $("#userRole").val()
+                    Role: $("#userRole").val()
                 };
 
                 console.log(registerData);
 
                 $.ajax({
-                    url: "https://localhost:44362/Auth/register",
+                    url: "/Account/Register",
+                    //url: "https://localhost:44362/Auth/register",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(registerData),
