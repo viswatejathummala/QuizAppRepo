@@ -4,6 +4,8 @@ using QuizAppWeb.Helpers;
 using QuizAppWeb.Models;
 using QuizAppWeb.Service;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace QuizAppWeb.Controllers
 {
@@ -48,7 +50,9 @@ namespace QuizAppWeb.Controllers
                 bool isSuccess = (response.IsSuccessStatusCode) ? true : false;
                 if (isSuccess)
                 {
-                    return Json(new { success = true });
+                    string actionName = string.Concat(_apiService.UserRole, "Dashboard");
+                    string redirectUrl = Url.Action(actionName, "Admin");
+                    return Json(new { success = true, redirectUrl });
                 }
 
                 ModelState.AddModelError("", "Invalid login credentials.");
@@ -60,6 +64,7 @@ namespace QuizAppWeb.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Register([FromBody]UserModel userModel)

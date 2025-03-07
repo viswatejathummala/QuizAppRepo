@@ -5,12 +5,12 @@ namespace QuizAppWeb.Controllers
 {
     public class AdminController : Controller
     {
-        [Authorize(Roles = "Admin")]
+        
         public IActionResult AdminDashboard()
         {
             return View();
         }
-        public IActionResult Dashboard() => View();
+        public IActionResult UserDashboard() => View();
         public IActionResult Index()
         {
             return View();

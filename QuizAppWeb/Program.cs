@@ -5,11 +5,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Set up Serilog as the logging provider
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day) // Log to a file (optional)
+    .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day) 
     .CreateLogger();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Add session services
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.Cookie.HttpOnly = true; 
+    options.Cookie.IsEssential = true;
+});
 
 // Register IHttpContextAccessor
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -23,10 +31,10 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

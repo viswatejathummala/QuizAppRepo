@@ -34,6 +34,7 @@ namespace QuizAppApi.Services
                 Email = user.Email,
                 PasswordHash = _passwordHasher.HashPassword(null, user.PasswordHash), // Hashing password
                 Role = user.Role,
+                LanguagePreference = user.LanguagePreference,
                 CreatedAt = DateTime.Now
             };
 

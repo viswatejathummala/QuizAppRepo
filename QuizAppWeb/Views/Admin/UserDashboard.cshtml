@@ -1,0 +1,115 @@
+﻿@{
+    ViewBag.Title = "User Dashboard";
+}
+
+<style>
+    .admin-dashboard {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2, h3 {
+        text-align: center;
+        color: #333;
+    }
+
+    .dashboard-actions {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        color: black;
+    }
+
+    .btn-info {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
+
+    .quiz-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .quiz-table th, .quiz-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .quiz-table th {
+            background: #f8f9fa;
+        }
+</style>
+
+<div class="admin-dashboard">
+    <h2>User Dashboard</h2>
+
+    <div class="dashboard-actions">
+        <a href="@Url.Action("CreateQuiz", "Quiz")" class="btn btn-primary">Create Quiz</a>
+        <a href="@Url.Action("ViewResults", "Results")" class="btn btn-secondary">View Results</a>
+        <a href="@Url.Action("UserManagement", "User")" class="btn btn-warning">User Management</a>
+    </div>
+
+    <h3>Quiz List</h3>
+    <table class="quiz-table">
+        <thead>
+            <tr>
+                <th>Quiz Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @*  @foreach (var quiz in Model.Quizzes)
+            {
+            <tr>
+            <td>@quiz.Name</td>
+            <td>
+            <a href="@Url.Action("Edit", "Quiz", new { id = quiz.Id })" class="btn btn-sm btn-info">Edit</a>
+            <a href="@Url.Action("Delete", "Quiz", new { id = quiz.Id })" class="btn btn-sm btn-danger">Delete</a>
+            <a href="@Url.Action("AssignUsers", "Quiz", new { id = quiz.Id })" class="btn btn-sm btn-success">Assign Users</a>
+            </td>
+            </tr>
+            } *@
+        </tbody>
+    </table>
+</div>

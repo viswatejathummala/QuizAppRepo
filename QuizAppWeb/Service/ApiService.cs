@@ -1,5 +1,7 @@
 ﻿using QuizAppWeb.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace QuizAppWeb.Service
@@ -9,6 +11,13 @@ namespace QuizAppWeb.Service
         private readonly HttpClient _httpClient;
         private readonly string _baseUrl;
         private IHttpContextAccessor _httpContextAccessor;
+
+        private string _userRole;
+        private string _languagePreference;
+
+        public string UserRole => _userRole;
+        public string LangPref => _languagePreference;
+
 
         public ApiService(HttpClient httpClient, IConfiguration configuration,IHttpContextAccessor httpContextAccessor)
         {
@@ -28,9 +37,11 @@ namespace QuizAppWeb.Service
                 {
                     var result = await response.Content.ReadAsStringAsync();
                    
-                    var token = JsonSerializer.Deserialize<JWTResponse>(result).Token;
+                    var token = JsonSerializer.Deserialize<JWTResponse>(result).token;
 
                     _httpContextAccessor.HttpContext.Session.SetString("jwtToken", token);
+
+                    ExtractClaimsFromToken(token);
 
                 }
 
@@ -41,6 +52,19 @@ namespace QuizAppWeb.Service
                 // Handle any exceptions during login
                 throw new InvalidOperationException("Error during login", ex);
             }
+        }
+
+        private void ExtractClaimsFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
+
+            _userRole = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value ?? "User";
+            _languagePreference = jwtToken.Claims.FirstOrDefault(c => c.Type == "language_Preference")?.Value ?? "en";
+
+            // Store them in session for persistence
+            _httpContextAccessor.HttpContext.Session.SetString("UserRole", _userRole);
+            _httpContextAccessor.HttpContext.Session.SetString("LanguagePreference", _languagePreference);
         }
         public async Task<HttpResponseMessage> RegisterAsync<T>(string endpoint, T registerModel)
         {
