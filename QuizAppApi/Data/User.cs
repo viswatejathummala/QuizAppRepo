@@ -29,6 +29,9 @@ namespace QuizAppApi.Data
         public string Role { get; set; } = "User";
 
         [Required]
+        public string LanguagePreference {  get; set; } = string.Empty;
+
+        [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();

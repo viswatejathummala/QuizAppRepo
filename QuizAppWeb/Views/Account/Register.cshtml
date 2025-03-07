@@ -63,6 +63,13 @@
                 <option value="User">User</option>
                 <option value="Admin">Admin</option>
             </select>
+            <select id="language">
+                @foreach (var lang in ViewBag.Languages)
+                {
+                    <option value="@lang.Value">@lang.Text (@lang.Value)</option>
+                }
+            </select>
+
             <button type="submit">Register</button>
         </form>
         <div class="links">
@@ -90,14 +97,14 @@
                     LastName: $("#lastName").val(),
                     Email: $("#email").val(),
                     PasswordHash: password,
-                    Role: $("#userRole").val()
+                    Role: $("#userRole").val(),
+                    LanguagePreference: $("#language").val()
                 };
 
                 console.log(registerData);
 
                 $.ajax({
                     url: "/Account/Register",
-                    //url: "https://localhost:44362/Auth/register",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(registerData),

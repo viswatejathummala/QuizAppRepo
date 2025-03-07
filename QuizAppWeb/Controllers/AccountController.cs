@@ -1,20 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using QuizAppWeb.Helpers;
 using QuizAppWeb.Models;
 using QuizAppWeb.Service;
+using System.Globalization;
 
 namespace QuizAppWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
+        private readonly IApiService _apiService;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IUserService userService)
+        public AccountController(IApiService apiService, ILogger<AccountController> logger)
         {
-            _userService = userService;
+            _apiService = apiService;
+            _logger = logger;
         }
 
         public IActionResult Login() => View();
-        public IActionResult Register() => View();
+        public IActionResult Register() {
+            ViewBag.Languages = GetSupportedLanguages();
+            return View();
+        }
+
+        private List<SelectListItem> GetSupportedLanguages()
+        {
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Name, // e.g., "en-US", "fr-FR"
+                    Text = c.EnglishName // e.g., "English", "French"
+                })
+                .OrderBy(c => c.Text)
+                .ToList();
+        }
         public IActionResult ForgotPassword() => View();
         public IActionResult ResetPassword() => View();
         
@@ -22,30 +42,47 @@ namespace QuizAppWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody]LoginModel loginModel)
         {
-            bool isSuccess = await _userService.LoginAsync(loginModel);
-            if (isSuccess)
+            try
             {
-                //Get the token from API and put here.
-                var token = "sample-jwt-token";
+                var response = await _apiService.LoginAsync(ApiEndpoints.Login, loginModel);
+                bool isSuccess = (response.IsSuccessStatusCode) ? true : false;
+                if (isSuccess)
+                {
+                    return Json(new { success = true });
+                }
 
-                return Json(new { success = true, token });
+                ModelState.AddModelError("", "Invalid login credentials.");
+                return BadRequest(new { success = false, message = "Invalid login credentials." });
             }
-
-            ModelState.AddModelError("", "Invalid login credentials.");
-            return BadRequest(new { success = false, message = "Invalid login credentials." });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Register([FromBody]UserModel userModel)
         {
-            bool isSuccess = await _userService.RegisterUserAsync(userModel);
-            if (isSuccess)
+            try
             {
-                return RedirectToAction("Login");
+                var response = await _apiService.RegisterAsync(ApiEndpoints.Register, userModel);
+                bool isSuccess = (response.IsSuccessStatusCode) ? true : false;
+
+                if (isSuccess)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                ModelState.AddModelError("", "Registration failed.");
+                return View(userModel);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return View();
             }
 
-            ModelState.AddModelError("", "Registration failed.");
-            return View(userModel);
         }
     }
 }

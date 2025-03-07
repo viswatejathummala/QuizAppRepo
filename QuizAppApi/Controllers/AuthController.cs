@@ -39,7 +39,7 @@ namespace QuizAppApi.Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            var token = GenerateJwtToken(user.Email);
+            var token = GenerateJwtToken(user);
             return Ok(new { token });
 
         }
@@ -59,13 +59,22 @@ namespace QuizAppApi.Controllers
             return Ok(new { message = "User registered successfully" });
         }
 
-        private string GenerateJwtToken(string username)
+        private string GenerateJwtToken(User user)
         { // iuser pred f language, user roles
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.Email),
+                            new Claim(ClaimTypes.Role, user.Role),
+                            new Claim("language_Preference",user.LanguagePreference),
+                            new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                         };
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, username) }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
