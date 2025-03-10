@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Localization;
 using QuizAppWeb.Service;
 using Serilog;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +10,12 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day) 
     .CreateLogger();
 
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 
 // Add session services
 builder.Services.AddSession(options =>
@@ -34,6 +40,17 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Configure Supported Cultures
+var supportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures)
+                                    .Where(c => !string.IsNullOrEmpty(c.Name)) 
+                                    .ToList();
+var localizationOptions = new RequestLocalizationOptions()
+{
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
+
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -41,6 +58,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseRequestLocalization(localizationOptions);
+
 
 app.MapControllerRoute(
     name: "default",
