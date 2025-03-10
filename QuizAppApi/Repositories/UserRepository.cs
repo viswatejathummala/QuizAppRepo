@@ -17,6 +17,11 @@ namespace QuizAppApi.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public async Task<IEnumerable<User>> GetUsersAsync()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
         public async Task AddUserAsync(User user)
         {
             await _context.Users.AddAsync(user);

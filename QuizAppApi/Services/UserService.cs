@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using QuizAppApi.Data;
 using QuizAppApi.Repositories;
+using System.Formats.Asn1;
 
 namespace QuizAppApi.Services
 {
@@ -14,7 +15,11 @@ namespace QuizAppApi.Services
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
         }
-
+       
+        public async Task<IEnumerable<User>> GetUsersAsync()
+        {
+            return await _userRepository.GetUsersAsync();
+        }
         public async Task<User> GetUserAsync(string email)
         {
             return await _userRepository.GetUserByEmailAsync(email);

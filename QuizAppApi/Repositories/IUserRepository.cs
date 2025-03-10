@@ -6,6 +6,6 @@ namespace QuizAppApi.Repositories
     {
             Task<User> GetUserByEmailAsync(string email);
             Task AddUserAsync(User user);
-
+            Task<IEnumerable<User>> GetUsersAsync();
     }
 }

@@ -25,6 +25,14 @@ namespace QuizAppApi.Controllers
             _config = config;
         }
 
+        [HttpGet("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _userService.GetUsersAsync();
+            return Ok(users);
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {

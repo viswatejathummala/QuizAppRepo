@@ -6,5 +6,7 @@ namespace QuizAppApi.Services
     {
         Task<User> GetUserAsync(string email);
         Task<bool> RegisterUserAsync(User user);
+
+        Task<IEnumerable<User>> GetUsersAsync();
     }
 }
