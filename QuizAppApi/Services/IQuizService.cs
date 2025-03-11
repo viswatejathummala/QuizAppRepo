@@ -1,4 +1,5 @@
 ﻿using QuizAppApi.Data;
+using QuizAppApi.DTO;
 
 namespace QuizAppApi.Services
 {
@@ -6,8 +7,8 @@ namespace QuizAppApi.Services
     {
         Task<IEnumerable<Quiz>> GetQuizzesAsync();
         Task<Quiz> GetQuizByIdAsync(int id);
-        Task AddQuizAsync(Quiz quiz);
-        Task UpdateQuizAsync(Quiz quiz);
+        Task AddQuizAsync(QuizDTO quiz);
+        Task UpdateQuizAsync(QuizDTO quiz);
         Task DeleteQuizAsync(int id);
     }
 }

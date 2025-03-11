@@ -26,6 +26,12 @@ namespace QuizAppWeb.Controllers
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
 
+            Response.Cookies.Append(
+        CookieRequestCultureProvider.DefaultCookieName,
+        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+    );
+
             var response =  await _apiService.GetAsync(ApiEndpoints.GetQuizzes);
             if (!response.IsSuccessStatusCode)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QuizAppApi.Data;
+using QuizAppApi.DTO;
 using QuizAppApi.Services;
 
 namespace QuizAppApi.Controllers
@@ -31,15 +32,15 @@ namespace QuizAppApi.Controllers
             return Ok(quiz);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateQuiz([FromBody] Quiz quiz)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateQuiz([FromBody] QuizDTO quiz)
         {
             await _quizService.AddQuizAsync(quiz);
             return CreatedAtAction(nameof(GetQuiz), new { id = quiz.QuizId }, quiz);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateQuiz(int id, [FromBody] Quiz quiz)
+        public async Task<IActionResult> UpdateQuiz(int id, [FromBody] QuizDTO quiz)
         {
             if (id != quiz.QuizId)
                 return BadRequest();

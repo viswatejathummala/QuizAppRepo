@@ -95,6 +95,7 @@
     </div>
 
     <h3>@Localizer["Quiz List"]</h3>
+    @* <p>Current Culture: @CultureInfo.CurrentCulture.Name</p> *@
 
     @if (Model.Quizzes != null && Model.Quizzes.Any())
     {
@@ -110,7 +111,7 @@
                 @foreach (var quiz in Model.Quizzes)
                 {
                     <tr>
-                        <td>@quiz.Title</td>
+                        <td>@Localizer[@quiz.Title] </td>
                         <td>
                             <a href="@Url.Action("Edit", "Quiz", new { id = quiz.QuizId })" class="btn btn-sm btn-info">@Localizer["Edit"]</a>
                             <a href="@Url.Action("Delete", "Quiz", new { id = quiz.QuizId })" class="btn btn-sm btn-danger">@Localizer["Delete"]</a>

@@ -11,5 +11,6 @@ namespace QuizAppWeb.Models
         public string? Description { get; set; }
 
         public int DurationMinutes { get; set; }
+        public int CreatedBy { get; set; }
     }
 }
